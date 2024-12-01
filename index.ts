@@ -29,5 +29,4 @@ export {
 }
 
 // the logger Singleton
-let logger: LoggerInstance | null = null;
-if (!logger) logger = new LoggerInstance();
+let logger = new LoggerInstance();
