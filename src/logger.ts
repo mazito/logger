@@ -44,12 +44,12 @@ class LoggerInstance {
   _lastTs: any = null;
   _elapsed: any = null;
 
-  level(v?: LogLevel): LogLevel {
-    if (!v || (this._level === v)) return this._level;
+  level(v?: LogLevel) {
+    if (!v || (this._level === v)) return this;
     this._level = v;
     const lvlcode = LogLevelCodes[v];
     this.info(`Logger level set to '${lvlcode}'`)
-    return this._level;
+    return this;
   }
 
   debug(message: string, obj?: any) {
