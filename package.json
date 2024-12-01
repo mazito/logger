@@ -1,7 +1,7 @@
 {
   "name": "@mazito/logger",
   "description": "Very simple logger that can easily ran in the Browser, Node, Bun and (possibly) Deno",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "author": { "email": "mazito.v2@gmail.com", "name": "MAZ" },
   "keywords": ["logger", "typescript"],
   "module": "index.ts",
