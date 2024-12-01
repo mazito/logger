@@ -110,7 +110,7 @@ logger.info("App started and logging");
 
 ### logger.level(v: LogLevel)
 
-Set the logger level after which messages will be logged, where: 
+Sets the logger level after which messages will be logged, where: 
 ~~~
 enum LogLevel {
   DEBUG = 1, 
@@ -120,6 +120,7 @@ enum LogLevel {
   FATAL = 5 
 }
 ~~~
+
 The default level is INFO.
 
 **NOTE**: the logger level can be setup in any module/function before starting 
@@ -195,6 +196,22 @@ Shows the time elapsed since the `timer()` reset and this call.
 Example output:
 ~~~
 2024-11-28 11:23:05.662 DTS (0.020s) Done client hooks initialize
+~~~
+
+## Chaining
+
+All methods can be chained:
+~~~
+  logger
+    .level(LogLevel.DEBUG)
+    .timer("Timer reseted")
+    .info("Some INFO message here")
+    .debug("Some debug obj with delay", {
+      delayed: await delay(1000)
+    })
+    .warn("Be careful with long delays !!!")
+    .info("End of the chain !")
+    .elapsed("Tooked some time");
 ~~~
 
 ## Errors
