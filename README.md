@@ -177,9 +177,7 @@ With `message` and optional `obj`:
 These functions provide ways to measure (and log) elapsed time since the timer reset,
 and are useful for measuring running times of parts of the code.
 
-They are **only available in DEBUG level**. 
-
-#### logger.timer(message: string, obj?: any)
+#### logger.timer(message?: string, obj?: any)
 
 Resets the logger timer to zero so we can use `elapsed()` to show time elapsed since
 this moment and the next elapsed call.
