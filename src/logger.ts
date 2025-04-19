@@ -48,6 +48,7 @@ class LoggerInstance {
   _elapsed: any = null;
   _timer: boolean = false;
   _prefix: string = '';
+  _contexts: string[] = [];
 
   level(v?: LogLevel) {
     if (!v || (this._level === v)) return this;
@@ -58,7 +59,14 @@ class LoggerInstance {
   }
 
   context(s?: string) {
-    if (s === undefined) { this._prefix = ''; return this };
+    if (s === undefined) { 
+      // pop context
+      this._contexts.pop();
+      const top = this._contexts.length;
+      this._prefix = top ? this._contexts[top-1] : ''; 
+      return this 
+    };
+    this._contexts.push(s);
     this._prefix = s;
     return this;
   }

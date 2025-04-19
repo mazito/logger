@@ -105,6 +105,25 @@ describe("Chaining", () => {
   });
 });
 
+describe("Context", () => {
+  test("Push and pop contexts", async () => {
+    logger
+      .level(LogLevel.DEBUG)
+      .context("[context 1 chaining]")
+      .timer("Timer reset")
+      .info("Some INFO message here")
+      .context("[context 2 long delays]")
+      .debug("Some debug obj with delay", {
+        delayed: await delay(1000)
+      })
+      .warn("Be careful with long delays !!!")
+      .context()
+      .info("End of the chain !")
+      .elapsed("Tooked some time");
+    expect(logger._elapsed).toBeGreaterThanOrEqual(1.0);
+  });
+});
+
 // HELPERS /////////////////////////////////////////////////////////////////////
 
 // Delay function
