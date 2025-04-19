@@ -172,6 +172,20 @@ With `message` and optional `obj`:
 ~~~
 
 
+## Context
+
+#### logger.context(prefix?: string)
+
+Enables prefixing all messages with module/function name or whatever is needed as context.
+
+To disable context prefixing use `logger.context()`.
+
+Example output using `logger.prefix('[database query]');`
+~~~
+2024-11-28 11:23:05.661 INF [database query] Started query ...
+~~~
+
+
 ## Timing 
 
 These functions provide ways to measure (and log) elapsed time since the timer reset,
@@ -179,12 +193,15 @@ and are useful for measuring running times of parts of the code.
 
 #### logger.timer(message?: string, obj?: any)
 
-Resets the logger timer to zero so we can use `elapsed()` to show time elapsed since
-this moment and the next elapsed call.
+Enables the logger timer and resets it to zero so we can use `elapsed()` to show time elapsed since
+this moment and the next elapsed call.  When enabled, all levels will also display the elapsed time.
+
+To disable use `logger.timer('OFF')`;
 
 Example output:
 ~~~
 2024-11-28 11:23:05.661 DTS (0.000s) Started client hooks timer
+2024-11-28 11:23:05.671 INF (0.010s) Opened conector to ...
 ~~~
 
 #### logger.elapsed(message: string, obj?: any)
@@ -227,8 +244,6 @@ try {
 }
 ~~~
 
-
-
 We can fully disect the Error instance and pass it as an object:
 
 ~~~javascript
@@ -244,8 +259,6 @@ try {
   }); 
 }
 ~~~
-
-
 
 We can use a custom error object if not an Error instance:
 
@@ -266,8 +279,6 @@ try {
 }
 ~~~
 
-
-
 We can also send the Error instance and some additional info:
 
 ~~~javascript
@@ -283,4 +294,3 @@ try {
   }); 
 }
 ~~~
-

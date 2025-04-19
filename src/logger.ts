@@ -28,7 +28,8 @@ enum LogLevel {
   INFO = 2, 
   WARN = 3, 
   ERROR = 4, 
-  FATAL = 5 
+  FATAL = 5,
+  TIMER = 6 // additional Level that displays over every level
 }
 
 const LogLevelCodes = {
@@ -36,19 +37,29 @@ const LogLevelCodes = {
   2: 'INF',
   3: 'WRN',
   4: 'ERR',
-  5: 'FTL'
+  5: 'FTL',
+  6: 'DTS'
 };
+
 
 class LoggerInstance {
   _level = LogLevel.INFO;
   _lastTs: any = null;
   _elapsed: any = null;
+  _timer: boolean = false;
+  _prefix: string = '';
 
   level(v?: LogLevel) {
     if (!v || (this._level === v)) return this;
     this._level = v;
     const lvlcode = LogLevelCodes[v];
     this.info(`Logger level set to '${lvlcode}'`)
+    return this;
+  }
+
+  context(s?: string) {
+    if (s === undefined) { this._prefix = ''; return this };
+    this._prefix = s;
     return this;
   }
 
@@ -77,33 +88,38 @@ class LoggerInstance {
     return this;
   }  
 
-  /** Reset the logger timer to zero */
+  /** Enable the timer and reset to zero */
   timer(message?: string, obj?: any) {
     this._lastTs = Date.now();
     this._elapsed = 0.0; // secs
-    logIt(this, this._level, `(${this._elapsed.toFixed(3)}s) ${message || ''}`, obj, true);
+    this._timer = (message?.toUpperCase() !== 'OFF');
+    if (this._timer) logIt(this, LogLevel.TIMER, `${message || ''}`, obj);
     return this;
   }
 
   /** Display the time elapsed since last call to this function */
   elapsed(message: string, obj?: any) {
-    if (!this._lastTs) this._lastTs = Date.now();
-    const ts = Date.now();
-    this._elapsed = (ts - this._lastTs)/1000.0; // secs
-    logIt(this, this._level, `(${this._elapsed.toFixed(3)}s) ${message}`, obj, true);
+    logIt(this, LogLevel.TIMER, `${message || ''}`, obj);
     return this;
   }
 }
 
 // HELPERS /////////////////////////////////////////////////////////////////////
 
-function logIt(_this: LoggerInstance, lvl: LogLevel, message: string, obj?: any, isTiming?: boolean) {
+function elapsedTs(_this: LoggerInstance): string {
+  if (!_this._lastTs) _this._lastTs = Date.now();
+  const ts = Date.now();
+  _this._elapsed = (ts - _this._lastTs)/1000.0; // secs
+  return `(${_this._elapsed.toFixed(3)}s)`;
+}
+
+function logIt(_this: LoggerInstance, lvl: LogLevel, message: string, obj?: any) {
   let lvlcode = LogLevelCodes[lvl];
   if (lvl < _this._level) return; 
-  if (isTiming) lvlcode = 'DTS';
+  message = _this._prefix ? `${_this._prefix} ${message}` : message;
+  message = _this._timer ? `${elapsedTs(_this)} ${message}` : message;
   const smsg = `${getISOTimeString()} ${lvlcode} ${message || ''}`;
-  if (!obj) console.log(smsg)
-  else console.log(smsg, obj)
+  if (!obj) { console.log(smsg) } else { console.log(smsg, obj) };
 }
 
 function getISOTimeString() {

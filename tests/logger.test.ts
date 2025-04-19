@@ -73,13 +73,27 @@ describe("Timing", () => {
     logger.elapsed("Delayed for 1000ms");
     expect(logger._elapsed).toBeGreaterThanOrEqual(1.0);
   });
+
+  test("Enable timer on/off", async () => {
+    logger.timer('Enabled')
+    logger.info('Timer was enabled');
+    await delay(1000);
+    logger.elapsed("Delayed for 1000ms");
+    expect(logger._elapsed).toBeGreaterThanOrEqual(1.0);
+    logger.timer('off')
+    logger.info('Timer was disabled');
+    await delay(1000);
+    logger.elapsed("Delayed for 1000ms");
+    expect(logger._elapsed).toBeLessThanOrEqual(0);
+  });
 });
 
 describe("Chaining", () => {
   test("Chain some functions", async () => {
     logger
-      .level(LogLevel.DEBUG)
-      .timer("Timer reseted")
+      .level(LogLevel.INFO)
+      .context("[logger test chaining]")
+      .timer("Timer reset")
       .info("Some INFO message here")
       .debug("Some debug obj with delay", {
         delayed: await delay(1000)
