@@ -93,7 +93,7 @@ class LoggerInstance {
     this._lastTs = Date.now();
     this._elapsed = 0.0; // secs
     this._timer = (message?.toUpperCase() !== 'OFF');
-    if (this._timer) logIt(this, LogLevel.TIMER, `${message || ''}`, obj);
+    if (this._timer && message) logIt(this, LogLevel.TIMER, `${message}`, obj);
     return this;
   }
 
